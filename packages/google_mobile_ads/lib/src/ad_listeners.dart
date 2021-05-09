@@ -17,6 +17,10 @@ import 'ad_containers.dart';
 /// The callback type to handle an event occurring for an [Ad].
 typedef AdEventCallback = void Function(Ad ad);
 
+typedef GenericAdEventCallback<Ad> = void Function(Ad ad);
+
+typedef GenericAdLoadErrorCallback<Ad> = void Function(Ad ad, LoadAdError error);
+
 /// The callback type to handle an error loading an [Ad].
 typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 
@@ -263,4 +267,34 @@ class NativeAdListener extends BaseAdListener implements AdWithViewListener {
   /// restart anything you may have stopped as part of [onAdOpened].
   @override
   AdEventCallback? onAdClosed;
+}
+
+
+//////////// New Ad Listener classes
+
+class FullScreenContentCallback<Ad> {
+
+  FullScreenContentCallback({
+    this.onAdShowedFullScreenContent,
+    this.onAdImpression,
+    this.onAdFailedToShowFullScreenContent,
+    this.onAdWillDismissFullScreenContent,
+    this.onAdDismissedFullScreenContent});
+
+  /// Called when an ad shows full screen content.
+  GenericAdEventCallback<Ad>? onAdShowedFullScreenContent;
+
+  /// Called when an ad dismisses full screen content.
+  GenericAdEventCallback<Ad>? onAdDismissedFullScreenContent;
+
+  /// Called when the ad will dismiss full screen content.
+  ///
+  /// Note this is only invoked on iOS.
+  GenericAdEventCallback<Ad>? onAdWillDismissFullScreenContent;
+
+  /// Called when an ad impression occurs.
+  GenericAdEventCallback<Ad>? onAdImpression;
+
+  /// Called when ad fails to show full screen content.
+  void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
 }

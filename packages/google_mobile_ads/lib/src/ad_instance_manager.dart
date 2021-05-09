@@ -116,9 +116,13 @@ class AdInstanceManager {
         (ad.listener as AdWithViewListener).onAdImpression?.call(ad);
         break;
       case 'onAdDidPresentFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdShowedFullScreenContent
-            ?.call(ad);
+        if (ad is FullScreenAd) {
+          _callOnAdShowedFullScreenContent(ad as FullScreenAd);
+        } else {
+          (ad.listener as FullScreenAdListener?)
+              ?.onAdShowedFullScreenContent
+              ?.call(ad);
+        }
         break;
       case 'adDidDismissFullScreenContent':
         (ad.listener as FullScreenAdListener?)
@@ -141,6 +145,14 @@ class AdInstanceManager {
       default:
         debugPrint('invalid ad event name: $eventName');
     }
+  }
+
+  void _callOnAdShowedFullScreenContent<T>(FullScreenAd<T> fullScreenAd) {
+    fullScreenAd.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(fullScreenAd as T);
+  }
+
+  FullScreenContentCallback<T>? getFullScreenContentCallback<T>(FullScreenAd<T> fullScreenAd) {
+    return fullScreenAd.fullScreenContentCallback;
   }
 
   void _onAdEventAndroid(
@@ -189,9 +201,13 @@ class AdInstanceManager {
             ?.call(ad, adError);
         break;
       case 'onAdShowedFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdShowedFullScreenContent
-            ?.call(ad);
+        if (ad is FullScreenAd) {
+          _callOnAdShowedFullScreenContent(ad as FullScreenAd);
+        } else {
+          (ad.listener as FullScreenAdListener?)
+              ?.onAdShowedFullScreenContent
+              ?.call(ad);
+        }
         break;
       case 'onAdDismissedFullScreenContent':
         (ad.listener as FullScreenAdListener?)

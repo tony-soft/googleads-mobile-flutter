@@ -624,11 +624,17 @@ class AdManagerInterstitialAd extends AdWithoutView {
   }
 }
 
+/// Base class for full screen ads such as Rewarded and Interstitial.
+abstract class FullScreenAd<Ad> {
+
+  FullScreenContentCallback<Ad>? fullScreenContentCallback;
+}
+
 /// An [Ad] where a user has the option of interacting with in exchange for in-app rewards.
 ///
 /// Because the video assets are so large, it's a good idea to start loading an
 /// ad well in advance of when it's likely to be needed.
-class RewardedAd extends AdWithoutView {
+class RewardedAd extends AdWithoutView implements FullScreenAd<RewardedAd> {
   /// Creates a [RewardedAd] with an [AdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
@@ -678,6 +684,17 @@ class RewardedAd extends AdWithoutView {
   @override
   Future<void> load() async {
     await instanceManager.loadRewardedAd(this);
+  }
+
+  @override
+  FullScreenContentCallback<RewardedAd>? fullScreenContentCallback;
+
+  static void loadWithAdRequest({
+    required String adUnitId,
+    required AdRequest request,
+    required GenericAdEventCallback<RewardedAd> onAdLoaded,
+    required GenericAdLoadErrorCallback<RewardedAd> onAdFailedToLoad}) {
+
   }
 }
 

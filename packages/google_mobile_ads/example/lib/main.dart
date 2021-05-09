@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void createRewardedAd() {
-    _rewardedAd ??= RewardedAd(
+    _rewardedAd = RewardedAd(
       adUnitId: RewardedAd.testAdUnitId,
       request: request,
       listener: RewardedAdListener(
@@ -113,7 +113,15 @@ class _MyAppState extends State<MyApp> {
               '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
             );
           }),
-    )..load();
+    );
+    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback<RewardedAd>(
+      onAdImpression: (ad) => print('$ad impression'),
+      onAdDismissedFullScreenContent: (ad) => print('$ad onAdDismissedFullScreenContent'),
+      onAdWillDismissFullScreenContent: (ad) => print('$ad onAdWillDismissFullScreenContent'),
+      onAdFailedToShowFullScreenContent: (ad, error) => print('$ad onAdFailedToShowFullScreenContent: $error'),
+      onAdShowedFullScreenContent: (ad) => print('$ad onAdShowedFullScreenContent'),
+    );
+    _rewardedAd?.load();
   }
 
   @override
