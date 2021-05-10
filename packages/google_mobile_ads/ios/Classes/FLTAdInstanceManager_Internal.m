@@ -83,12 +83,15 @@
 }
 
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error {
-    if(_channel) [_channel invokeMethod:@"onAdEvent"
-                              arguments:@{
-                                  @"adId" : [self adIdFor:ad],
-                                  @"eventName" : @"onAdFailedToLoad",
-                                  @"loadAdError" : error
-                              }];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{
+                         @"adId" : [self adIdFor:ad],
+                         @"eventName" : @"onAdFailedToLoad",
+                         @"loadAdError" : error
+                     }];
+    }
 }
 
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad name:(NSString *)name data:(NSString *)data {
