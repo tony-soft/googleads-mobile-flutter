@@ -90,7 +90,7 @@
     if(adId) {
         [_channel invokeMethod:@"onAdEvent"
                      arguments:@{
-                         @"adId" : [self adIdFor:ad],
+                         @"adId" : adId,
                          @"eventName" : @"onAdFailedToLoad",
                          @"loadAdError" : error
                      }];
@@ -98,48 +98,69 @@
 }
 
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad name:(NSString *)name data:(NSString *)data {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-                 @"eventName" : @"onAppEvent",
-                 @"name" : name,
-                 @"data" : data
-               }];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{
+                         @"adId" : adId,
+                         @"eventName" : @"onAppEvent",
+                         @"name" : name,
+                         @"data" : data
+                     }];
+    }
 }
 
 - (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdClicked"}];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{@"adId" : adId, @"eventName" : @"onNativeAdClicked"}];
+    }
 }
 
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdImpression"}];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{@"adId" : adId, @"eventName" : @"onNativeAdImpression"}];
+    }
 }
 
 - (void)onAdOpened:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdOpened"}];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{@"adId" : adId, @"eventName" : @"onAdOpened"}];
+    }
 }
 
 - (void)onApplicationExit:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onApplicationExit"}];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{@"adId" : adId, @"eventName" : @"onApplicationExit"}];
+    }
 }
 
 - (void)onAdClosed:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdClosed"}];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{@"adId" : adId, @"eventName" : @"onAdClosed"}];
+    }
 }
 
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-                 @"eventName" : @"onRewardedAdUserEarnedReward",
-                 @"rewardItem" : reward,
-               }];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{
+                         @"adId" : adId,
+                         @"eventName" : @"onRewardedAdUserEarnedReward",
+                         @"rewardItem" : reward,
+                     }];
+    }
 }
 @end
 
