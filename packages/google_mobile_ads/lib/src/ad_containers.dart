@@ -737,13 +737,13 @@ class RewardedAd extends AdWithoutView {
   /// Loads a [RewardedAd] using an [AdManagerAdRequest].
   static Future<void> loadWithAdManagerAdRequest({
     required String adUnitId,
-    required AdManagerAdRequest adManagerAdRequest,
+    required AdManagerAdRequest adManagerRequest,
     required RewardedAdLoadCallback rewardedAdLoadCallback,
     ServerSideVerificationOptions? serverSideVerificationOptions}) async {
 
     RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
         adUnitId: adUnitId,
-        adManagerRequest: adManagerAdRequest,
+        adManagerRequest: adManagerRequest,
         rewardedAdLoadCallback: rewardedAdLoadCallback,
         serverSideVerificationOptions: serverSideVerificationOptions
     );
