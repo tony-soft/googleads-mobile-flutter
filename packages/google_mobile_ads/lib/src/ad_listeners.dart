@@ -17,11 +17,14 @@ import 'ad_containers.dart';
 /// The callback type to handle an event occurring for an [Ad].
 typedef AdEventCallback = void Function(Ad ad);
 
+/// Generic callback type for an event occurring on an Ad.
 typedef GenericAdEventCallback<Ad> = void Function(Ad ad);
 
+/// A generic callback type for when an error occurs loading an ad.
 typedef GenericAdLoadErrorCallback<Ad> = void Function(
     Ad ad, LoadAdError error);
 
+/// The callback type for when a user earns a reward from a [RewardedAd].
 typedef OnUserEarnedRewardCallback = void Function(
     RewardedAd ad, RewardItem reward);
 
@@ -32,7 +35,7 @@ typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 ///
 /// Contains callbacks for successful and failed load events.
 abstract class BaseAdListener {
-  /// Default constructor for [BaseAdListener].
+  /// Default constructor for [BaseAdListener], used by subclasses.
   BaseAdListener(this.onAdLoaded, this.onAdFailedToLoad);
 
   /// Called when an ad is successfully received.
@@ -49,7 +52,7 @@ class AppEventListener {
 }
 
 /// Shared event callbacks used in Native and Banner ads.
-class AdWithViewListener {
+abstract class AdWithViewListener {
   /// Called when an ad is successfully received.
   AdEventCallback? onAdLoaded;
 
@@ -72,9 +75,12 @@ class AdWithViewListener {
   AdEventCallback? onAdImpression;
 }
 
-/// Listener for Banner Ads.
+/// A listener for receiving notifications the lifecycle of a [BannerAd].
 class BannerAdListener extends BaseAdListener implements AdWithViewListener {
-  /// Default constructor for [BannerAdListener].
+  /// Constructs a [BannerAdListener] that notifies for the provided event callbacks.
+  ///
+  /// [onAdFailedToLoad] should be implemented to call [Ad.dispose], in order
+  /// to free up resources.
   BannerAdListener({
     AdEventCallback? onAdLoaded,
     AdLoadErrorCallback? onAdFailedToLoad,
@@ -104,10 +110,13 @@ class BannerAdListener extends BaseAdListener implements AdWithViewListener {
   AdEventCallback? onAdImpression;
 }
 
-/// Listener for Ad Manager Banner Ads.
+/// A listener for receiving notifications the lifecycle of an [AdManagerBannerAd].
 class AdManagerBannerAdListener extends BannerAdListener
     implements AppEventListener, AdWithViewListener {
-  /// Default constructor for [AdManagerBannerAdListener].
+  /// Constructs an [AdManagerBannerAdListener] with the provided event callbacks.
+  ///
+  /// [onAdFailedToLoad] should be implemented to call [Ad.dispose], in order
+  /// to free up resources.
   AdManagerBannerAdListener(
       {AdEventCallback? onAdLoaded,
       Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -129,9 +138,12 @@ class AdManagerBannerAdListener extends BannerAdListener
   void Function(Ad ad, String name, String data)? onAppEvent;
 }
 
-/// Listener for native ads.
+/// A listener for receiving notifications the lifecycle of a [NativeAd].
 class NativeAdListener extends BaseAdListener implements AdWithViewListener {
-  /// Default constructor for [NativeAdListener].
+  /// Constructs a [NativeAdListener] with the provided event callbacks.
+  ///
+  /// [onAdFailedToLoad] should be implemented to call [Ad.dispose], in order
+  /// to free up resources.
   NativeAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -165,10 +177,13 @@ class NativeAdListener extends BaseAdListener implements AdWithViewListener {
   AdEventCallback? onAdClosed;
 }
 
-//////////// New Ad Listener classes
-
+/// Callback events for for full screen ads, such as Rewarded and Interstitial.
 class FullScreenContentCallback<Ad> {
-  /// Construct a new [FullScreenContentCallback]. TODO - fix comment.
+
+  /// Construct a new [FullScreenContentCallback].
+  ///
+  /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
+  /// and [onAdDismissedFullScreenContent], in order to free up resources.
   FullScreenContentCallback(
       {this.onAdShowedFullScreenContent,
       this.onAdImpression,
@@ -192,20 +207,26 @@ class FullScreenContentCallback<Ad> {
   void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
 }
 
-abstract class AdLoadCallback<Ad> {
+/// Generic parent class for ad load callbacks.
+abstract class AdLoadCallback<T> {
+  /// Default constructor for [AdLoadCallback[, used by suclasses.
   const AdLoadCallback(
       {required this.onAdLoaded, required this.onAdFailedToLoad});
 
-  final GenericAdEventCallback<Ad> onAdLoaded;
+  /// Called when the ad successfully loads.
+  final GenericAdEventCallback<T> onAdLoaded;
 
-  final GenericAdLoadErrorCallback<Ad> onAdFailedToLoad;
+  /// Called when an error occurs loading the ad.
+  ///
+  /// [Ad.dispose] should be called here.
+  final GenericAdLoadErrorCallback<T> onAdFailedToLoad;
 }
 
 /// This class holds callbacks for loading a [RewardedAd].
 class RewardedAdLoadCallback extends AdLoadCallback<RewardedAd> {
   /// Construct a [RewardedAdLoadCallback].
   ///
-  /// [TODO - example of what to do.]
+  /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
   const RewardedAdLoadCallback(
       {required GenericAdEventCallback<RewardedAd> onAdLoaded,
       required GenericAdLoadErrorCallback<RewardedAd> onAdFailedToLoad})
@@ -216,19 +237,19 @@ class RewardedAdLoadCallback extends AdLoadCallback<RewardedAd> {
 class InterstitialAdLoadCallback extends AdLoadCallback<InterstitialAd> {
   /// Construct a [InterstitialAdLoadCallback].
   ///
-  /// [TODO - example of what to do.]
+  /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
   const InterstitialAdLoadCallback(
       {required GenericAdEventCallback<InterstitialAd> onAdLoaded,
       required GenericAdLoadErrorCallback<InterstitialAd> onAdFailedToLoad})
       : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }
 
-/// This class holds callbacks for loading an [InterstitialAd].
+/// This class holds callbacks for loading an [AdManagerInterstitialAd].
 class AdManagerInterstitialAdLoadCallback
     extends AdLoadCallback<AdManagerInterstitialAd> {
   /// Construct a [AdManagerInterstitialAdLoadCallback].
   ///
-  /// [TODO - example of what to do.]
+  /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
   const AdManagerInterstitialAdLoadCallback(
       {required GenericAdEventCallback<AdManagerInterstitialAd> onAdLoaded,
       required GenericAdLoadErrorCallback<AdManagerInterstitialAd>

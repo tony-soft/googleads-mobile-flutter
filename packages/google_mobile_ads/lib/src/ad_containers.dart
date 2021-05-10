@@ -26,9 +26,9 @@ import 'package:flutter/widgets.dart';
 import 'ad_instance_manager.dart';
 import 'ad_listeners.dart';
 
-/// Error information about why an ad load operation failed.
+/// Error information about why an ad operation failed.
 class AdError {
-  /// Default constructor for [LoadAdError].
+  /// Default constructor for [AdError].
   AdError(this.code, this.domain, this.message);
 
   /// Unique code to identify the error.
@@ -129,7 +129,7 @@ class AdRequest {
 
 /// Targeting info per the Ad Manager API.
 class AdManagerAdRequest {
-  /// Default constructor for [AdManagerAdRequest].
+  /// Constructs an [AdManagerAdRequest] from optional targeting information.
   const AdManagerAdRequest({
     this.keywords,
     this.contentUrl,
@@ -177,7 +177,7 @@ class AdManagerAdRequest {
 /// and [iOS](https://developers.google.com/admob/ios/banner#banner_sizes) for
 /// additional details.
 class AdSize {
-  /// Default constructor for [AdSize].
+  /// Constructs an [AdSize] with the given [width] and [height].
   const AdSize({
     required this.width,
     required this.height,
@@ -601,7 +601,7 @@ class InterstitialAd extends AdWithoutView {
 
   /// Display this on top of the application.
   ///
-  /// Set [this.fullScreenContentCallback] before calling this method to be
+  /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
@@ -629,6 +629,7 @@ class AdManagerInterstitialAd extends AdWithoutView {
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<AdManagerInterstitialAd>? fullScreenContentCallback;
 
+  /// An optional listener for app events.
   AppEventListener? appEventListener;
 
   /// Loads an [AdManagerInterstitialAd] with the given [adUnitId] and [request].
@@ -645,7 +646,7 @@ class AdManagerInterstitialAd extends AdWithoutView {
 
   /// Displays this on top of the application.
   ///
-  /// Set [this.fullScreenContentCallback] before calling this method to be
+  /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
@@ -740,7 +741,7 @@ class RewardedAd extends AdWithoutView {
 
   /// Display this on top of the application.
   ///
-  /// Set [this.fullScreenContentCallback] before calling this method to be
+  /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
   /// [onUserEarnedReward] will be invoked when the user earns a reward.
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
