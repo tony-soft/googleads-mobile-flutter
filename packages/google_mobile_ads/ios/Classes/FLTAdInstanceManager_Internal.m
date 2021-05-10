@@ -78,8 +78,11 @@
 }
 
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdLoaded"}];
+    NSNumber* adId = [self adIdFor:ad];
+    if(adId) {
+        [_channel invokeMethod:@"onAdEvent"
+                     arguments:@{@"adId" : adId, @"eventName" : @"onAdLoaded"}];
+    }
 }
 
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error {
